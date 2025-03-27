@@ -7,3 +7,4 @@ userRoute.get("/register", userController_1.registerUser);
 userRoute.get("/login", userController_1.authUser);
 userRoute.get("/login", userController_1.logout);
 exports.default = userRoute;
+//# sourceMappingURL=userRoute.js.map

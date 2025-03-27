@@ -11,5 +11,6 @@ dotenv_1.default.config();
 const PORT = process.env.PORT || 3000;
 app.use("/users", userRoute_1.default);
 app.listen(PORT, () => {
-    console.log("http://localhost:7000");
+    console.log(`Server running on port ${PORT}`);
 });
+//# sourceMappingURL=app.js.map

@@ -23,3 +23,4 @@ exports.authUser = (0, express_async_handler_1.default)((req, res) => __awaiter(
 exports.logout = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send({ message: "Logout success!" });
 }));
+//# sourceMappingURL=userController.js.map
