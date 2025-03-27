@@ -5,9 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
-const env_const_1 = require("./constants/env.const");
+const dotenv_1 = __importDefault(require("dotenv"));
 const app = (0, express_1.default)();
+dotenv_1.default.config();
+const PORT = process.env.PORT || 3000;
 app.use("/users", userRoute_1.default);
-app.listen(env_const_1.PORT, () => {
+app.listen(PORT, () => {
     console.log("http://localhost:7000");
 });

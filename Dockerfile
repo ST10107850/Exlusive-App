@@ -1,22 +1,22 @@
 # Use official Node.js image
 FROM node:18
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock)
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the project files
+# Copy all project files
 COPY . .
 
-# Compile TypeScript (if applicable)
+# Build TypeScript files
 RUN npm run build
 
-# Expose port (default for many Node.js apps)
+# Expose the correct port (Render assigns PORT dynamically)
 EXPOSE 3000
 
 # Start the app
