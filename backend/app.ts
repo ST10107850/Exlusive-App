@@ -3,13 +3,13 @@ import userRoute from "./routes/userRoute";
 
 import dotenv from "dotenv";
 
-const app = express();
 dotenv.config();
+const app = express();
+const PORT = Number(process.env.PORT) || 7000;
 
-const PORT = process.env.PORT || 3000;
 
-app.use("/users", userRoute);
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
+
+app.use('/users', userRoute);
