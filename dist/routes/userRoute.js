@@ -6,5 +6,6 @@ const userRoute = (0, express_1.Router)();
 userRoute.get("/register", userController_1.registerUser);
 userRoute.get("/login", userController_1.authUser);
 userRoute.get("/login", userController_1.logout);
+userRoute.get("/", userController_1.getCustomerUsers);
 exports.default = userRoute;
 //# sourceMappingURL=userRoute.js.map
