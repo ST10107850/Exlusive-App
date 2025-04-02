@@ -38,8 +38,8 @@ export const loginSchema = z.object({
 export const registerSchema = loginSchema
   .extend({
     //You were not passing the lastName and firstName in this schema
-    firstName: firstNameSchema,
-    lastName: lastNameSchema,
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
     confirmPassword: passwordSchema,
     role: z.enum(["admin", "customer"]).default("customer"),
     phone: z.number().optional(),

@@ -48,7 +48,6 @@ export const errorHandle = (
   err: Error | HttpError | ZodError,
   req: Request,
   res: Response,
-  next: NextFunction
 ): void => {
   console.error("Error:", err);
 
@@ -68,6 +67,6 @@ export const errorHandle = (
 
   res.status(INTERNAL_SERVER_ERROR).json({
     message: "Internal Server Error",
-    stack: NODE_ENV === "development" ? err.stack : undefined,
+    stack: NODE_ENV === "development" ,
   });
 };
