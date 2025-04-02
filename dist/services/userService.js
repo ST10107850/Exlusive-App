@@ -23,9 +23,9 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const generateOTP_1 = require("../utils/generateOTP");
 const sendOTPEmail_1 = require("../utils/sendOTPEmail ");
 const registerUser = (userData) => __awaiter(void 0, void 0, void 0, function* () {
-    const { firstName, lastName, email, phone, idNumber, role, password, profileImage, } = userData;
+    const { email, role, password, } = userData;
     const userExist = yield userModel_1.default.findOne({
-        $or: [{ email }, { phone }, { idNumber }],
+        $or: [{ email }],
     });
     if (userExist) {
         throw new HttpError_1.default("User already exists", http_codes_1.CONFLICT);
@@ -33,14 +33,9 @@ const registerUser = (userData) => __awaiter(void 0, void 0, void 0, function* (
     const otp = (0, generateOTP_1.generateOTP)();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
     const newUser = yield userModel_1.default.create({
-        firstName,
-        lastName,
         email,
-        phone,
-        idNumber,
         role,
         password,
-        profileImage,
         otp,
         otpExpires,
         isVerified: false,

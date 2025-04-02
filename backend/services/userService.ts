@@ -15,22 +15,16 @@ import mongoose from "mongoose";
 import { Request } from "express";
 import { generateOTP } from "../utils/generateOTP";
 import { sendOTPEmail } from "../utils/sendOTPEmail ";
-import bcrypt from "bcrypt";
 
 export const registerUser = async (userData: User) => {
   const {
-    firstName,
-    lastName,
     email,
-    phone,
-    idNumber,
     role,
     password,
-    profileImage,
   } = userData;
 
   const userExist = await Users.findOne({
-    $or: [{ email }, { phone }, { idNumber }],
+    $or: [{ email }],
   });
 
   if (userExist) {
@@ -41,14 +35,9 @@ export const registerUser = async (userData: User) => {
   const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
   const newUser = await Users.create({
-    firstName,
-    lastName,
     email,
-    phone,
-    idNumber,
     role,
     password,
-    profileImage,
     otp,
     otpExpires,
     isVerified: false,
