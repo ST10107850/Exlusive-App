@@ -8,20 +8,27 @@ import productRoute from "./routes/productRoute";
 import cartRoute from "./routes/cartRoute";
 import orderRoute from "./routes/orderRoute";
 
+
+
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const PORT = Number(process.env.PORT) || 7000;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server is listening on port ${PORT}`);
-  dbConnection();
-});
 
 app.use("/api/users", userRoute);
 app.use("/api/category", categoryRoute);
 app.use("/api/product", productRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/orders", orderRoute);
+
+app.use(notFound);
+app.use(errorHandle);
+const PORT = process.env.PORT || 5000;
+
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+  dbConnection();
+});
+
+

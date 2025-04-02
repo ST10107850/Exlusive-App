@@ -21,16 +21,17 @@ interface AuthenticatedRequest extends Request {
 }
 
 export const createUser = expressAsyncHandler(async (req, res) => {
-  const user = await registerUser(req.body);
+    const user = await registerUser(req.body);
+    const data = new Users(user).omitFields(["password", "refreshToken"]);
 
-  const data = new Users(user).omitFields(["password", "refreshToken"]);
-
-  res.status(CREATED).json({
-    success: true,
-    status: " User successfully registered",
-    data: data,
-  });
+    res.status(CREATED).json({
+      success: true,
+      status: "User successfully registered",
+      data: data,
+    });
+ 
 });
+
 
 export const authUser = expressAsyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {

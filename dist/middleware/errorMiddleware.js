@@ -26,7 +26,7 @@ const notFound = (req, res, next) => {
     next(error);
 };
 exports.notFound = notFound;
-const errorHandle = (err, req, res) => {
+const errorHandle = (err, req, res, next) => {
     console.error("Error:", err);
     if (err instanceof HttpError_1.default) {
         res.status(err.statusCode).json({
@@ -42,7 +42,7 @@ const errorHandle = (err, req, res) => {
     }
     res.status(http_codes_1.INTERNAL_SERVER_ERROR).json({
         message: "Internal Server Error",
-        stack: env_const_1.NODE_ENV === "development",
+        stack: env_const_1.NODE_ENV === "development" ? err.stack : undefined,
     });
 };
 exports.errorHandle = errorHandle;

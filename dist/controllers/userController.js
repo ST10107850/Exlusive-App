@@ -25,7 +25,7 @@ exports.createUser = (0, express_async_handler_1.default)((req, res) => __awaite
     const data = new userModel_1.default(user).omitFields(["password", "refreshToken"]);
     res.status(http_codes_1.CREATED).json({
         success: true,
-        status: " User successfully registered",
+        status: "User successfully registered",
         data: data,
     });
 }));
