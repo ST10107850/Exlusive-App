@@ -53,12 +53,10 @@ const userSchema = new mongoose_1.Schema({
     },
     firstName: {
         type: String,
-        required: true,
         trim: true,
     },
     lastName: {
         type: String,
-        required: true,
         trim: true,
     },
     email: {

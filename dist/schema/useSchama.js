@@ -36,8 +36,8 @@ exports.loginSchema = zod_1.z.object({
 });
 exports.registerSchema = exports.loginSchema
     .extend({
-    firstName: exports.firstNameSchema,
-    lastName: exports.lastNameSchema,
+    firstName: zod_1.z.string().optional(),
+    lastName: zod_1.z.string().optional(),
     confirmPassword: exports.passwordSchema,
     role: zod_1.z.enum(["admin", "customer"]).default("customer"),
     phone: zod_1.z.number().optional(),
