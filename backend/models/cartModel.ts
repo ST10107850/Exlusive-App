@@ -16,8 +16,6 @@ const CartSchema = new Schema<cartTypes>(
           required: true,
         },
         quantity: { type: Number, required: true, default: 1 },
-        color: { type: String },
-        size: { type: String },
       },
     ],
   },

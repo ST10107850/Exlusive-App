@@ -25,7 +25,7 @@ userRoute.post("/", registerValidation, createUser);
 userRoute.post("/auth", loginValidation, authUser);
 userRoute.get("/profile", protect, getUserProfile);
 userRoute.post("/logout", logout);
-userRoute.put("/profile", protect, validateUpdate, updateUserProfile);//protect, roleMiddleware(["admin"]),
+userRoute.put("/profile", protect, validateUpdate, updateUserProfile);
 userRoute.get("/",  getCustomerUsers);
 userRoute.put("/update-password", protect, validateUpdate, updatePassword);
 userRoute.delete(

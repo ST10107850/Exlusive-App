@@ -7,13 +7,27 @@ interface AuthenticatedRequest extends Request {
   user?: { _id: string };
 }
 
-export const getOneDoc = (Model: any) =>
+export const getOneDoc = (Model: any, populateFields: string[] = []) =>
   expressAsyncHandler(async (req, res, next) => {
-    const doc = await Model.findById(req.params.id);
+    let query = Model.findById(req.params.id);
+
+    const requestedPopulates = typeof req.query.populate === "string"
+      ? req.query.populate.split(",")
+      : [];
+
+    const allPopulates = [...populateFields, ...requestedPopulates];
+
+    // Apply population if fields exist
+    if (allPopulates.length > 0) {
+      query = query.populate(allPopulates);
+    }
+
+    const doc = await query;
 
     if (!doc) {
       return next(new HttpError("No document found with that ID", NOT_FOUND));
     }
+
     res.status(OK).json({
       success: true,
       id: req.params.id,
@@ -21,23 +35,40 @@ export const getOneDoc = (Model: any) =>
     });
   });
 
-export const getPagnation = (Model: any) =>
-  expressAsyncHandler(async (req, res, next) => {
-    const currentPage = Number(req.query.currentPage) || 1;
-    const limit = Number(req.query.limit) || 10;
+export const getPagination = (Model: any, populateFields: string[] = []) =>
+  expressAsyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const currentPage = Number(req.query.currentPage) || 1;
+      const limit = Number(req.query.limit) || 10;
+      const sortBy = (req.query.sortBy as string) || "createdAt";
+      const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
+      const skip = (currentPage - 1) * limit;
 
-    const skip = (currentPage - 1) * limit;
+      let query = Model.find({})
+        .sort({ [sortBy]: sortOrder }) 
+        .skip(skip)
+        .limit(limit);
 
-    const doc = await Model.find({}).skip(skip).limit(limit);
-    if (!doc) {
-      return next(new HttpError("No documents found", NOT_FOUND));
+     
+      populateFields.forEach((field) => {
+        query = query.populate(field);
+      });
+
+      const doc = await query;
+      const totalCount = await Model.countDocuments();
+
+      if (!doc.length) {
+        return next(new HttpError("No documents found", NOT_FOUND));
+      }
+
+      res.status(OK).json({
+        success: true,
+        data: doc,
+        totalPages: Math.ceil(totalCount / limit),
+        currentPage,
+      });
     }
-    res.status(OK).json({
-      success: true,
-      data: doc,
-    });
-  });
-
+  );
 
 export const getAllDoc = (Model: any) =>
   expressAsyncHandler(async (req, res, next) => {

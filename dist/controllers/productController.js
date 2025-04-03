@@ -35,8 +35,8 @@ exports.getCategoryProduct = (0, express_async_handler_1.default)((req, res) => 
         .status(http_codes_1.OK)
         .json({ success: true, message: "Product found", data: products });
 }));
-exports.getAllProduct = (0, crudHandlerFactory_1.getPagnation)(productModel_1.default);
+exports.getAllProduct = (0, crudHandlerFactory_1.getPagination)(productModel_1.default, ["categoryId"]);
 exports.updateProduct = (0, crudHandlerFactory_1.updateDoc)(productModel_1.default);
-exports.getProductDetails = (0, crudHandlerFactory_1.getOneDoc)(productModel_1.default);
+exports.getProductDetails = (0, crudHandlerFactory_1.getOneDoc)(productModel_1.default, ["categoryId"]);
 exports.deleteProduct = (0, crudHandlerFactory_1.deleteOneDoc)(productModel_1.default);
 //# sourceMappingURL=productController.js.map

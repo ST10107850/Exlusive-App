@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllCarts = exports.deleteCart = exports.createCart = void 0;
+exports.getAllCarts = exports.deleteCart = exports.updateCartQuantity = exports.createCart = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const cartService_1 = require("../services/cartService");
 const http_codes_1 = require("../constants/http.codes");
@@ -29,6 +29,23 @@ exports.createCart = (0, express_async_handler_1.default)((req, res) => __awaite
     res.status(http_codes_1.CREATED).json({
         status: "success",
         message: "Product has been added to cart",
+        data: cart,
+    });
+}));
+exports.updateCartQuantity = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.user) {
+        throw new HttpError_1.default("User not authenticated", http_codes_1.UNAUTHORIZED);
+    }
+    const { id } = req.params;
+    const { quantity } = req.body;
+    const userId = req.user._id.toString();
+    if (quantity < 1) {
+        throw new HttpError_1.default("Quantity must be at least 1", http_codes_1.NOT_FOUND);
+    }
+    const cart = yield (0, cartService_1.updateCartQuantityService)(userId, id, quantity);
+    res.json({
+        success: true,
+        message: "Cart updated successfully",
         data: cart,
     });
 }));

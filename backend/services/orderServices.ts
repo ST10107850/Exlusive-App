@@ -49,8 +49,7 @@ export const createOrdersService = async (
 
   const userAddress = user.address.find(
     (address) =>
-      (address as ShippingAddress)._id.toString() === shippingAddress.toString()
-    // address._id.equals(shippingAddress)
+      ((address as unknown) as ShippingAddress)._id.toString() === shippingAddress.toString()
   );
 
   if (!userAddress) {
@@ -85,8 +84,6 @@ export const createOrdersService = async (
         return {
           product: product._id,
           quantity: cartItem.quantity,
-          size: cartItem.size || "N/A",
-          color: cartItem.color || "N/A",
         };
       })
     );

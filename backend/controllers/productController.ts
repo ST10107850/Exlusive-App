@@ -9,7 +9,7 @@ import HttpError from "../utils/HttpError";
 import {
   deleteOneDoc,
   getOneDoc,
-  getPagnation,
+  getPagination,
   updateDoc,
 } from "../services/crudHandlerFactory";
 import Product from "../models/productModel";
@@ -40,12 +40,10 @@ export const getCategoryProduct = expressAsyncHandler(async (req, res) => {
     .json({ success: true, message: "Product found", data: products });
 });
 
-
-
-export const getAllProduct = getPagnation(Product);
+export const getAllProduct = getPagination(Product, ["categoryId"]);
 
 export const updateProduct = updateDoc(Product);
 
-export const getProductDetails = getOneDoc(Product);
+export const getProductDetails = getOneDoc(Product, ["categoryId"]);
 
 export const deleteProduct = deleteOneDoc(Product);

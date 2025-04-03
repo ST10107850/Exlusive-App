@@ -1,10 +1,8 @@
-import { Document, ObjectId } from "mongoose";
+import mongoose, { Document, ObjectId } from "mongoose";
 
 export interface itemsTypes {
-  product: ObjectId;
+  product: mongoose.Types.ObjectId;
   quantity: number;
-  color: string;
-  size: string;
 }
 
 export interface CartItemWithId {
@@ -14,7 +12,6 @@ export interface CartItemWithId {
   color: string;
   size: string;
 }
-
 
 export interface cartTypes extends Document {
   user: ObjectId;

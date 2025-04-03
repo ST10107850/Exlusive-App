@@ -12,12 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserDoc = exports.updateDoc = exports.deleteOneDoc = exports.getAllDoc = exports.getPagnation = exports.getOneDoc = void 0;
+exports.getUserDoc = exports.updateDoc = exports.deleteOneDoc = exports.getAllDoc = exports.getPagination = exports.getOneDoc = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const HttpError_1 = __importDefault(require("../utils/HttpError"));
 const http_codes_1 = require("../constants/http.codes");
-const getOneDoc = (Model) => (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const doc = yield Model.findById(req.params.id);
+const getOneDoc = (Model, populateFields = []) => (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let query = Model.findById(req.params.id);
+    const requestedPopulates = typeof req.query.populate === "string"
+        ? req.query.populate.split(",")
+        : [];
+    const allPopulates = [...populateFields, ...requestedPopulates];
+    if (allPopulates.length > 0) {
+        query = query.populate(allPopulates);
+    }
+    const doc = yield query;
     if (!doc) {
         return next(new HttpError_1.default("No document found with that ID", http_codes_1.NOT_FOUND));
     }
@@ -28,20 +36,32 @@ const getOneDoc = (Model) => (0, express_async_handler_1.default)((req, res, nex
     });
 }));
 exports.getOneDoc = getOneDoc;
-const getPagnation = (Model) => (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getPagination = (Model, populateFields = []) => (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const currentPage = Number(req.query.currentPage) || 1;
     const limit = Number(req.query.limit) || 10;
+    const sortBy = req.query.sortBy || "createdAt";
+    const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
     const skip = (currentPage - 1) * limit;
-    const doc = yield Model.find({}).skip(skip).limit(limit);
-    if (!doc) {
+    let query = Model.find({})
+        .sort({ [sortBy]: sortOrder })
+        .skip(skip)
+        .limit(limit);
+    populateFields.forEach((field) => {
+        query = query.populate(field);
+    });
+    const doc = yield query;
+    const totalCount = yield Model.countDocuments();
+    if (!doc.length) {
         return next(new HttpError_1.default("No documents found", http_codes_1.NOT_FOUND));
     }
     res.status(http_codes_1.OK).json({
         success: true,
         data: doc,
+        totalPages: Math.ceil(totalCount / limit),
+        currentPage,
     });
 }));
-exports.getPagnation = getPagnation;
+exports.getPagination = getPagination;
 const getAllDoc = (Model) => (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const doc = yield Model.find({})
         .populate({

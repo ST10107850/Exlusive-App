@@ -25,7 +25,6 @@ export const descriptionSchema = z
 
 export const priceSchema = z
   .number()
-  .int()
   .nonnegative("Price must be a positive number");
 
 export const productSchema = z.object({

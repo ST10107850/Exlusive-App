@@ -18,7 +18,6 @@ exports.descriptionSchema = zod_1.z
     .min(2, "Description must be at least 2 characters long");
 exports.priceSchema = zod_1.z
     .number()
-    .int()
     .nonnegative("Price must be a positive number");
 exports.productSchema = zod_1.z.object({
     productName: exports.productNameSchema,

@@ -6,8 +6,6 @@ const cartItemSchema = z.object({
     message: "Invalid product iD format",
   }),
   quantity: z.number().gte(1, "Quantity must be at least 1"),
-  color: z.string().optional(),
-  size: z.string().optional(),
 });
 
 export const cartSchema = z.object({

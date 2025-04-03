@@ -63,8 +63,6 @@ const createOrdersService = (userId, shippingAddress, paymentMethod, cardDetails
             return {
                 product: product._id,
                 quantity: cartItem.quantity,
-                size: cartItem.size || "N/A",
-                color: cartItem.color || "N/A",
             };
         })));
         cartItems.push({
