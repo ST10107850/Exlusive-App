@@ -8,11 +8,14 @@ import productRoute from "./routes/productRoute";
 import cartRoute from "./routes/cartRoute";
 import orderRoute from "./routes/orderRoute";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 
 
 const app = express();
 app.use(cookieParser());
+
+app.use(cors())
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
