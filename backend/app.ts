@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cookieParser());
 
 const allowedOrigins = [
-  "http://localhost:9000",
+  "http://localhost:3000",
   "https://urban-jungle.vercel.app",
 ];
 
