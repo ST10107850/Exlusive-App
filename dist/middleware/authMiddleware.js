@@ -14,24 +14,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.roleMiddleware = exports.protect = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 const HttpError_1 = __importDefault(require("../utils/HttpError"));
 const http_codes_1 = require("../constants/http.codes");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const env_const_1 = require("../constants/env.const");
-const userModel_1 = __importDefault(require("../models/userModel"));
 exports.protect = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.cookies.jwt;
+    let token;
+    if (req.headers.authorization &&
+        req.headers.authorization.startsWith("Bearer")) {
+        token = req.headers.authorization.split(" ")[1];
+    }
+    if (!token && req.cookies && req.cookies.jwt) {
+        token = req.cookies.jwt;
+    }
     if (!token) {
-        return next(new HttpError_1.default("Not authorized, no token", http_codes_1.UNAUTHORIZED));
+        throw new HttpError_1.default("Not authorized, no token", http_codes_1.UNAUTHORIZED);
     }
-    const decoded = jsonwebtoken_1.default.verify(token, env_const_1.JWT_SECRET);
-    const user = yield userModel_1.default.findById(decoded.userId);
-    if (!user) {
-        console.log("User not found for decoded ID:", decoded.userId);
-        return next(new HttpError_1.default("User not found", http_codes_1.UNAUTHORIZED));
+    try {
+        const decoded = jsonwebtoken_1.default.verify(token, env_const_1.JWT_SECRET);
+        const user = yield userModel_1.default.findById(decoded.userId).select("-password");
+        if (!user) {
+            throw new HttpError_1.default("User not found", http_codes_1.UNAUTHORIZED);
+        }
+        req.user = user;
+        next();
     }
-    req.user = user;
-    next();
+    catch (error) {
+        throw new HttpError_1.default("Not authorized, token invalid", http_codes_1.UNAUTHORIZED);
+    }
 }));
 const roleMiddleware = (allowedRoles) => {
     return (req, res, next) => {
