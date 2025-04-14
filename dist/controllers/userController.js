@@ -30,12 +30,13 @@ exports.createUser = (0, express_async_handler_1.default)((req, res) => __awaite
     });
 }));
 exports.authUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { user } = yield (0, userService_1.loginUser)(req.body, res);
+    const { user, refreshToken } = yield (0, userService_1.loginUser)(req.body, res);
     const data = new userModel_1.default(user).omitFields(["password", "refreshToken"]);
     res.status(http_codes_1.OK).json({
         success: true,
         status: "User successfully logged in",
         data: data,
+        refreshToken,
     });
 }));
 exports.getUserProfile = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

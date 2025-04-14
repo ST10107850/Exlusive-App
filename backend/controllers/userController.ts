@@ -21,21 +21,19 @@ interface AuthenticatedRequest extends Request {
 }
 
 export const createUser = expressAsyncHandler(async (req, res) => {
-    const user = await registerUser(req.body);
-    const data = new Users(user).omitFields(["password", "refreshToken"]);
+  const user = await registerUser(req.body);
+  const data = new Users(user).omitFields(["password", "refreshToken"]);
 
-    res.status(CREATED).json({
-      success: true,
-      status: "User successfully registered",
-      data: data,
-    });
- 
+  res.status(CREATED).json({
+    success: true,
+    status: "User successfully registered",
+    data: data,
+  });
 });
-
 
 export const authUser = expressAsyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const { user } = await loginUser(req.body, res);
+    const { user, refreshToken } = await loginUser(req.body, res);
 
     const data = new Users(user).omitFields(["password", "refreshToken"]);
 
@@ -43,6 +41,7 @@ export const authUser = expressAsyncHandler(
       success: true,
       status: "User successfully logged in",
       data: data,
+      refreshToken,
     });
   }
 );
@@ -152,10 +151,10 @@ export const forgetPassword = expressAsyncHandler(
 
 export const resetPasssword = expressAsyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const {email, newPassword, otp} =req.body;
+    const { email, newPassword, otp } = req.body;
 
     await resetPassswordService(email, newPassword, otp);
 
-    res.status(OK).json({message: "Password reset successfully." })
+    res.status(OK).json({ message: "Password reset successfully." });
   }
 );
